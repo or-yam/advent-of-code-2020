@@ -11,12 +11,16 @@ const countYes = (group) => {
     for (let i = 0; i < person.length; i++) {
       let letter = person.charAt(i);
       if (!letters[letter]) {
-        letters[letter] = 'yes';
+        letters[letter] = 1;
+      } else {
+        letters[letter] += 1;
       }
     }
   }
-  return Object.keys(letters).length;
+
+  return Object.entries(letters).filter((p) => p[1] === group.length).length;
 };
+
 
 const countAll = (list) => {
   let counter = 0;
