@@ -5,6 +5,25 @@ const input = require('fs')
 
 // input : {row:'BFFFBBF' column:'RLR' }
 
+//row
+//first 7 chars => F || B
+//0-127
+//F => LOWER
+//B => HIGHER
+
+//column
+//0-7
+//last 3 chars => L || R
+//L => LOWER
+//R => HIGHER
+
+//ID = (row * 8) + column
+
+//TESTS
+// BFFFBBFRRR: row 70, column 7, seat ID 567. {row:'BFFFBBF', column:'RRR' }
+// FFFBBBFRRR: row 14, column 7, seat ID 119. {row:'FFFBBBF', column:'RRR' }
+// BBFFBBFRLL: row 102, column 4, seat ID 820. {row:'BBFFBBF', column:'RLL' }
+
 const findRow = (rowStr) => {
   let rows = []; // [0,1,2,3,4...127]
   for (let i = 0; i < 128; i++) {
@@ -68,22 +87,35 @@ const findHighestId = (list) => {
   return highest;
 };
 
-console.log(findHighestId(input));
-//row
-//first 7 chars => F || B
-//0-127
-//F => LOWER
-//B => HIGHER
+let sits = [];
+for (let i = 0; i < 128; i++) {
+  let col = [];
+  sits.push(col);
+  for (let j = 0; j < 8; j++) {
+    col.push('*');
+  }
+}
 
-//column
-//0-7
-//last 3 chars => L || R
-//L => LOWER
-//R => HIGHER
+const findAllSeats = (list) => {
+  list.pop();
+  for (const ticket of list) {
+    const row = findRow(ticket.row);
+    const column = findColumn(ticket.column);
+    sits[row][column] = 1;
+  }
+};
 
-//ID = (row * 8) + column
-
-//TESTS
-// BFFFBBFRRR: row 70, column 7, seat ID 567. {row:'BFFFBBF', column:'RRR' }
-// FFFBBBFRRR: row 14, column 7, seat ID 119. {row:'FFFBBBF', column:'RRR' }
-// BBFFBBFRLL: row 102, column 4, seat ID 820. {row:'BBFFBBF', column:'RLL' }
+const findMySit = () => {
+  findAllSeats(input);
+  // console.log(sits);
+  for (let i = 1; i < sits.length - 1; i++) {
+    for (let j = 0; j < sits[i].length; j++) {
+      if (sits[i][j] !== 1) {
+        console.log(i, j);
+      }
+    }
+  }
+};
+findMySit();
+//got the middle one 92,5
+console.log(92 * 8 + 5);
